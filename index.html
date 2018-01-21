@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="never">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <script type="text/javascript">
+        function setRem() {
+            var deviceWidth =window.screen.width;
+            document.querySelector('html').style.fontSize=deviceWidth/15+'px';
+        }
+        setRem();
+        window.onresize = function(){
+                setRem();
+        }
+    </script>
+    <title>新闻客户端</title>
+    <script type="text/javascript" src="js/swiper.js"></script>
+    <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+    <script type="text/javascript" src="js/angular-route.js"></script>
+    <script type="text/javascript" src="js/http.js"></script>
+
+
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script>
+        var myApp =angular.module('myApp',['moviecat.services.http']);
+
+        myApp.controller('jokeController',function ($scope, $http) {
+            var appkey = "1d98976224e776b1ed0c7734138ca079";
+            $scope.jokeLists=[];
+
+            var page= 1;
+
+            function getDatas() {
+                $http.jsonp('http://v.juhe.cn/joke/img/text.php',{
+                    params:{
+                        key:appkey,
+                        page:page,
+                        pagesize:20,
+                        callback:'JSON_CALLBACK',
+                    }
+
+                }).success(function (data) {
+                    if(data.reason==='Success'){
+                        $scope.jokeLists=data;
+                        console.log(data);
+                    }else {
+                        return;
+                    }
+
+
+                }).error(function () {
+                    console.log('请求失败');
+                });
+            }
+
+
+
+            getDatas();
+
+            refreshEnd= false;
+            times=0;//加载次数
+            oriSpeed=300;
+            var myJokeContent = new Swiper('#myJokeContent',{
+                speed: oriSpeed,
+                slidesPerView: 'auto',
+                freeMode: false,
+                direction: 'vertical',
+                setWrapperSize: true,
+                scrollbar: {
+                    el: '.swiper-scrollbar',
+                },
+                // observer:true,
+                // observeParents:true,
+
+                on:{
+                    init:function () {
+
+                    },
+                    //下拉释放刷新
+                    touchEnd: function(){
+                        swiper=this;
+                        refreshText=swiper.$el.find('.refresh')
+                        if(this.translate>100){
+                            swiper.setTransition(this.params.speed);
+                            swiper.setTranslate(100);
+                            swiper.touchEventsData.isTouched=false;//跳过touchEnd事件后面的跳转(4.0.5)
+                            refreshText.html('刷新中')
+
+                            swiper.allowTouchMove=false;
+
+                            ++page;
+                            $http.jsonp('http://v.juhe.cn/joke/img/text.php',{
+                                params:{
+                                    key:appkey,
+                                    page:page,
+                                    pagesize:20,
+                                    callback:'JSON_CALLBACK',
+                                }
+
+                            }).success(function (data) {
+                                if(data.reason==='Success'){
+                                    swiper.removeAllSlides();
+                                    // $scope.jokeLists.result.data.unshift(data.result.data);
+                                    $scope.jokeLists=data;
+                                    refreshText.html('刷新完成');
+                                    refreshEnd=true;
+                                    swiper.allowTouchMove=true;
+
+                                    console.log(data);
+
+                                }else {
+                                    return;
+                                }
+
+                            }).error(function () {
+                                console.log('请求失败');
+                            });
+
+                        }
+
+                    },
+                    touchStart: function(){
+                        if(refreshEnd==true){
+                            this.$el.find('.refresh').html('释放刷新');
+                            refreshEnd=false;
+                        }
+                    },
+
+                    //加载更多
+                    reachEnd: function(){//非正式反弹回调函数，上拉释放加载更多可参考上例
+                        swiper=this
+                        //slidesheight=0;
+                        //for(h=0;h<swiper.slides.length;h++){
+                        //	slidesheight+=swiper.slides[h].offsetHeight;
+                        //}
+                        //endTranslate=this.height-slidesheight-20
+                        //if(this.translate < endTranslate){}
+                        if(swiper.translate<-100){
+
+                            swiper.allowTouchMove=false;//禁止触摸
+                            swiper.params.virtualTranslate=true;//定住不给回弹
+
+                            page++;
+                            $http.jsonp('http://v.juhe.cn/joke/img/text.php',{
+                                params:{
+                                    key:appkey,
+                                    page:page,
+                                    pagesize:20,
+                                    callback:'JSON_CALLBACK',
+                                }
+
+                            }).success(function (data) {
+
+
+                                if(data.reason==='Success'){
+                                    swiper.removeAllSlides();
+                                    $scope.jokeLists=data;
+                                    refreshText.html('刷新完成');
+                                    refreshEnd=true;
+                                    swiper.allowTouchMove=true;
+                                    swiper.params.virtualTranslate=false;
+
+                                    times++
+
+                                    console.log(data);
+                                }else {
+                                    return;
+                                }
+                            }).error(function () {
+                                console.log('请求失败');
+                            });
+
+                        }
+                    }
+                }
+            });
+
+
+        });
+        myApp.controller('newsController',function ($scope, $http,HttpService) {
+
+            $scope.reyingDatas = [];
+
+            $scope.getData  = function ( start,count) {
+                HttpService.jsonp(
+                    'http://api.douban.com/v2/movie/in_theaters', {
+                        'start':start,
+                        'count':count
+                    },
+                    function(data) {
+                        console.log(data);
+                        $scope.reyingDatas = data;
+                $scope.$apply();
+
+                    });
+
+            }
+            $scope.getData(0,5);
+
+        });
+
+
+    </script>
+
+</head>
+<body ng-app="myApp">
+<!--splash-->
+<div  style="z-index: 11"  class="swiper-container my-swiper-splash" id="swiper-splash">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide splash-item1"></div>
+        <div class="swiper-slide splash-item2"></div>
+        <div class="swiper-slide splash-item3">
+            <button id="btn">
+                开始体验
+            </button>
+        </div>
+    </div>
+    <!-- 如果需要分页器 -->
+    <div class="swiper-pagination"></div>
+
+    <!--&lt;!&ndash; 如果需要导航按钮 &ndash;&gt;-->
+    <!--<div class="swiper-button-prev"></div>-->
+    <!--<div class="swiper-button-next"></div>-->
+
+    <!--&lt;!&ndash; 如果需要滚动条 &ndash;&gt;-->
+    <!--<div class="swiper-scrollbar"></div>-->
+</div>
+<!--tab栏-->
+<ul style="z-index: 10" class="tabbar">
+    <li class="tab1">首页</li>
+    <li class="tab2">视频</li>
+    <li class="tab3">笑话</li>
+    <li class="tab4">新闻</li>
+    <li class="tab5">设置</li>
+</ul>
+<!--tab栏滚动-->
+<div style="z-index: 9" class="swiper-container my-swiper-tabbar" id="swiper-tabbar">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <div class="tabbar-header">
+                <button class="taggle">
+
+                </button>
+                首页
+            </div>
+            <div>
+                首页
+            </div>
+        </div>
+        <div class="swiper-slide">
+            <div class="tabbar-header">
+                <button class="taggle">
+
+                </button>
+                视频
+            </div>
+            <div>
+                视频
+            </div>
+        </div>
+        <div class="swiper-slide" ng-controller="jokeController">
+            <div class="tabbar-header">
+                <button class="taggle">
+
+                </button>
+                笑话
+            </div>
+
+            <!--<div class="joke" ng-repeat="item in jokeLists.result.data" >-->
+                <!--<p>{{item.content}}</p>-->
+                <!--<img  ng-src="{{item.url}}" alt="">-->
+            <!--</div>-->
+            <div class="swiper-container myJokeContent" id="myJokeContent">
+
+                <div class="swiper-wrapper" >
+                    <div class="refresh">释放刷新</div>
+                    <div class="swiper-slide joke-item" ng-repeat="item in jokeLists.result.data" >
+                    <p>{{item.content}}</p>
+                    <img  ng-src="{{item.url}}" alt="">
+                    </div>
+                    <!--<div class="swiper-slide">-->
+                        <!--<p>我是标题</p>-->
+                        <!--<img src="images/title_red_bg.png" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="loadmore">加载更多</div>-->
+                </div>
+                <div class="swiper-scrollbar"></div>
+            </div>
+
+        </div>
+        <div class="swiper-slide" ng-controller="newsController">
+            <div class="tabbar-header">
+                <button class="taggle">
+
+                </button>
+                新闻
+            </div>
+            <div class="swiper-container myNewsType" id="myNewsType">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" >
+                        <p class="type-title">正在热映</p>
+
+                        <div class="swiper-container myNewsList" id="myNewsList">
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">
+                                    <div class="swiper-container myNewsCarousel" >
+
+                                        <!-- Add Arrows -->
+                                        <div class="swiper-pagination"></div>
+                                        <!--<div class="swiper-wrapper">-->
+                                        <!--<div  ng-repeat="item in reyingDatas.subjects" style=" background:url('{{item.images.small}}') no-repeat center;" class="swiper-slide" >-->
+
+                                        <!--</div>-->
+
+
+                                        <!--</div>-->
+
+                                        <div class="swiper-wrapper">
+                                            <div class="swiper-slide" style="background:url('{{reyingDatas.subjects[0].images.small}}') no-repeat center;"></div>
+                                            <div class="swiper-slide" style="background:url('{{reyingDatas.subjects[1].images.small}}') no-repeat center;"></div>
+                                            <div class="swiper-slide" style="background:url('{{reyingDatas.subjects[2].images.small}}') no-repeat center;"></div>
+                                            <div class="swiper-slide" style="background:url('{{reyingDatas.subjects[3].images.small}}') no-repeat center;"></div>
+                                            <div class="swiper-slide" style="background:url('{{reyingDatas.subjects[4].images.small}}') no-repeat center;"></div>
+
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="swiper-slide" ng-repeat="item in reyingDatas.subjects">
+                                    <div class="news-list">
+                                        <img src="{{item.images.small}}" alt="">
+                                        <div>
+                                            <p class="title">
+                                                {{item.title}}
+                                            </p>
+                                            <p class="content">
+                                                {{item.year}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="swiper-slide">
+                        <p class="type-title">即将上映</p>
+                        <div class="swiper-container myNewsCarousel" >
+                            <div class="swiper-pagination"></div>
+                            <!-- Add Arrows -->
+
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">Slide 1</div>
+                                <div class="swiper-slide">Slide 2</div>
+                                <div class="swiper-slide">Slide 3</div>
+
+
+                            </div>
+                            <!-- Add Scrollbar -->
+
+                        </div>
+                        <p>我是即将上映里的内容</p>
+                    </div>
+                    <div class="swiper-slide">
+                        <p class="type-title">top250</p>
+                        <div class="swiper-container myNewsCarousel" >
+                            <div class="swiper-pagination"></div>
+                            <!-- Add Arrows -->
+
+                            <div class="swiper-wrapper">
+                                <div class="swiper-slide">Slide 1</div>
+                                <div class="swiper-slide">Slide 2</div>
+                                <div class="swiper-slide">Slide 3</div>
+
+
+                            </div>
+                            <!-- Add Scrollbar -->
+
+                        </div>
+                        <p>我是top250里的内容</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+        <div class="swiper-slide">
+            <div class="tabbar-header">
+                <button class="taggle">
+
+                </button>
+                设置
+            </div>
+            <div>
+                设置
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="menu" style="z-index: 7">
+    <ul>
+        <li>首页</li>
+        <li>视频</li>
+        <li>笑话</li>
+        <li>新闻</li>
+        <li>设置</li>
+    </ul>
+</div>
+
+</body>
+</html>
+<script>
+$(function () {
+    var mySwiper = new Swiper ('#swiper-splash', {
+
+        // loop: true,
+        // direction : 'vertical',
+        //自动轮播设置
+        // autoplay: {
+        // delay: 3000,
+        // stopOnLastSlide: false,
+        // disableOnInteraction: true,
+        // },
+
+
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination',
+            clickable :true,
+        },
+        resistanceRatio : 0,
+
+        // 如果需要前进后退按钮
+        // navigation: {
+        //     nextEl: '.swiper-button-next',
+        //     prevEl: '.swiper-button-prev',
+        // },
+
+        // effect : 'cube',
+
+
+        // // 如果需要滚动条
+        // scrollbar: '.swiper-scrollbar',
+    });
+
+    $('.splash-item3 #btn').click(function () {
+        $('#swiper-splash').fadeOut(300);
+    });
+
+    $('.tabbar li').click(function (event) {
+        var index = $(this).index();
+        $('.tabbar li').eq(index).addClass('press').siblings().removeClass('press');
+        swiper.slideTo(index, 100, false);
+
+    });
+
+    var swiper = new Swiper('#swiper-tabbar',{
+        resistanceRatio : 0,
+        on: {
+            slideChangeTransitionEnd: function(){
+                var index = this.activeIndex//切换结束时，告诉我现在是第几个slide
+                $('.tabbar li').eq(index).click();
+
+            },
+        },
+    });
+
+    $('.tabbar li').eq(0).click();
+
+    var menuisShow = false;
+
+    function closeMenu() {
+        $('.my-swiper-tabbar').stop().animate({'margin-left':'0'},300);
+        $('.tabbar').stop().animate({'margin-left':'0'},300);
+        menuisShow=false;
+    }
+
+
+
+
+    $(' .taggle').click(function () {
+        if(menuisShow){
+            closeMenu();
+        }else {
+            $('.my-swiper-tabbar').stop().animate({'margin-left':'50%'},300);
+            $('.tabbar').stop().animate({'margin-left':'50%'},300);
+            menuisShow=true;
+        }
+
+    });
+
+    $('.menu li').click(function () {
+        var index =$(this).index();
+
+        $('.menu li').eq(index).addClass('press').siblings().removeClass('press');
+
+        $('.tabbar li').eq(index).click();
+        closeMenu();
+    });
+    $('.menu li').eq(0).click();
+
+
+
+    var myNewsCarousel = new Swiper('.myNewsCarousel', {
+        initialSlide :0,
+        slidesPerView: 1,
+        observer:true,
+        observeParents:true,
+        loop: true,
+        nested:true,
+        resistanceRatio: 0,
+        autoplay:true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+
+    });
+
+    var myNewsType = new Swiper('#myNewsType', {
+        slidesPerView: 1,
+
+        loop: true,
+        // nested:true,
+        resistanceRatio: 0,
+
+
+    });
+
+    var myNewsList = new Swiper('#myNewsList', {
+        observer:true,
+        observeParents:true,
+        direction: 'vertical',
+        freeMode : true,
+        slidesPerView: 'auto',
+        resistanceRatio : 0,
+
+
+    });
+
+
+
+
+});
+</script>
+

@@ -1,0 +1,322 @@
+html,
+body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+  font-family: "Microsoft YaHei UI";
+  overflow: hidden;
+}
+body {
+  position: relative;
+}
+ul,
+ol,
+p,
+a {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.my-swiper-splash {
+  width: 100%;
+  height: 100%;
+  background: url("../images/splash_bg_newyear.jpg");
+}
+.my-swiper-splash .swiper-slide.splash-item1 {
+  text-align: center;
+  background: url("../images/guide_1.png") no-repeat center;
+}
+.my-swiper-splash .swiper-slide.splash-item2 {
+  text-align: center;
+  background: url("../images/guide_2.png") no-repeat center;
+}
+.my-swiper-splash .swiper-slide.splash-item3 {
+  text-align: center;
+  background: url("../images/guide_3.png") no-repeat center;
+  position: relative;
+}
+.my-swiper-splash .swiper-slide.splash-item3 button {
+  border: none;
+  position: absolute;
+  bottom: 2.4rem;
+  left: 50%;
+  margin-left: -1.92rem;
+  font-size: 0.8rem;
+  color: white;
+  font-weight: bolder;
+  background: linear-gradient(red, green, blue);
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.4rem;
+}
+.my-swiper-splash .swiper-slide.splash-item3 button:hover {
+  background: linear-gradient(blue, red, greenyellow);
+}
+.tabbar {
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0;
+  height: 2rem;
+  width: 100%;
+  background: #898989;
+}
+.tabbar li {
+  float: left;
+}
+.tabbar .tab1 {
+  height: 2rem;
+  width: 20%;
+  background: url("../images/home.png") no-repeat top;
+  background-size: 30%;
+  padding-top: 1.2rem;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: bolder;
+}
+.tabbar .tab1.press {
+  background: url("../images/home_press.png") no-repeat top;
+  background-size: 30%;
+  color: red;
+}
+.tabbar .tab2 {
+  height: 2rem;
+  width: 20%;
+  background: url("../images/newscenter.png") no-repeat top;
+  background-size: 30%;
+  padding-top: 1.2rem;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: bolder;
+}
+.tabbar .tab2.press {
+  background: url("../images/newscenter_press.png") no-repeat top;
+  background-size: 30%;
+  color: red;
+}
+.tabbar .tab3 {
+  height: 2rem;
+  width: 20%;
+  background: url("../images/smartservice.png") no-repeat top;
+  background-size: 30%;
+  padding-top: 1.2rem;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: bolder;
+}
+.tabbar .tab3.press {
+  background: url("../images/smartservice_press.png") no-repeat top;
+  background-size: 30%;
+  color: red;
+}
+.tabbar .tab4 {
+  height: 2rem;
+  width: 20%;
+  background: url("../images/govaffairs.png") no-repeat top;
+  background-size: 30%;
+  padding-top: 1.2rem;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: bolder;
+}
+.tabbar .tab4.press {
+  background: url("../images/govaffairs_press.png") no-repeat top;
+  background-size: 30%;
+  color: red;
+}
+.tabbar .tab5 {
+  height: 2rem;
+  width: 20%;
+  background: url("../images/setting.png") no-repeat top;
+  background-size: 30%;
+  padding-top: 1.2rem;
+  box-sizing: border-box;
+  display: block;
+  text-align: center;
+  color: white;
+  font-size: 0.48rem;
+  font-weight: bolder;
+}
+.tabbar .tab5.press {
+  background: url("../images/setting_press.png") no-repeat top;
+  background-size: 30%;
+  color: red;
+}
+.my-swiper-tabbar {
+  box-sizing: border-box;
+  background: white;
+  height: 100%;
+  width: 100%;
+  padding-bottom: 2rem;
+}
+.my-swiper-tabbar .swiper-slide .tabbar-header {
+  width: 100%;
+  height: 2rem;
+  background: url("../images/title_red_bg.png") repeat center;
+  text-align: center;
+  line-height: 2rem;
+  position: relative;
+  color: white;
+}
+.my-swiper-tabbar .swiper-slide .tabbar-header button {
+  top: 50%;
+  margin-top: -0.56rem;
+  left: 0;
+  position: absolute;
+  border: none;
+  width: 1.4rem;
+  height: 1.16rem;
+  background: url("../images/img_menu.png") no-repeat center;
+  background-size: 70%;
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent {
+  width: 100%;
+  height: 100%;
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent .swiper-slide {
+  width: 100%;
+  text-align: center;
+  font-size: 0.72rem;
+  background: #eeeeee;
+  height: auto;
+  margin-bottom: 0.4rem;
+  /* Center slide text vertically */
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent .swiper-slide p {
+  height: auto;
+  width: 100%;
+  display: block;
+  line-height: 1.2rem;
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent .swiper-slide image {
+  width: 100%;
+  display: block;
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent .refresh {
+  position: absolute;
+  line-height: 4rem;
+  bottom: 100%;
+  text-align: center;
+  width: 100%;
+}
+.my-swiper-tabbar .swiper-slide .myJokeContent .loadmore {
+  position: absolute;
+  line-height: 0.8rem;
+  top: 100%;
+  text-align: center;
+  width: 100%;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide {
+  text-align: center;
+  font-size: 0.72rem;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .type-title {
+  line-height: 2rem;
+  width: 100%;
+  height: 2rem;
+  display: inline-block;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsCarousel {
+  width: 100%;
+  height: 8rem;
+  background: #898989;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsCarousel .swiper-slide {
+  text-align: center;
+  font-size: 0.72rem;
+  width: 100%;
+  height: 100%;
+  background: red;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList {
+  width: 100%;
+  height: 20rem;
+  overflow: hidden;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-wrapper {
+  margin-bottom: 2rem;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide {
+  text-align: center;
+  height: 4rem;
+  width: 100%;
+  background: #fff;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .myNewsCarousel {
+  width: 100%;
+  height: 8rem;
+  background: #898989;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .myNewsCarousel .swiper-slide {
+  text-align: center;
+  font-size: 0.72rem;
+  width: 100%;
+  height: 100%;
+  background: red;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list {
+  height: 4rem;
+  width: 100%;
+  background: #eee;
+  margin-top: 0.4rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list img {
+  width: 4rem;
+  height: 4rem;
+  float: left;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list div {
+  float: right;
+  width: 11rem;
+  height: 4rem;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list div p {
+  text-align: left;
+  margin-left: 0.4rem;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list div .title {
+  font-weight: bolder;
+}
+.my-swiper-tabbar .swiper-slide .myNewsType .swiper-slide .myNewsList .swiper-slide .news-list div .content {
+  font-size: 0.48rem;
+}
+.menu {
+  width: 50%;
+  height: 100%;
+  background: #898989;
+  position: absolute;
+  top: 0;
+  z-index: 1;
+}
+.menu ul {
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+}
+.menu ul li {
+  line-height: 1.2rem;
+  padding-top: 1.2rem;
+}
+.menu ul li.press {
+  color: red;
+}
+/*# sourceMappingURL=styles.css.map */
